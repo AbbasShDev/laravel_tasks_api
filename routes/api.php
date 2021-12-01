@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\TaskController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('register', [AuthController::class, 'register']);
@@ -19,5 +20,9 @@ Route::middleware('auth:api')->group(function (){
     Route::apiResource('categories', CategoryController::class);
     Route::patch('categories/{categoryId}/restore', [CategoryController::class, 'restore']);
     Route::delete('categories/{categoryId}/force-delete', [CategoryController::class, 'forceDelete']);
+
+    Route::apiResource('tasks', TaskController::class);
+    Route::patch('tasks/{taskId}/restore', [TaskController::class, 'restore']);
+    Route::delete('tasks/{taskId}/force-delete', [TaskController::class, 'forceDelete']);
 
 });
