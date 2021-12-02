@@ -12,7 +12,9 @@ class TaskController extends Controller {
 
     public function index()
     {
-        return TaskResource::collection(auth()->user()->tasks->load('category'));
+        $tasks = auth()->user()->tasks()->with('category')->paginate(2);
+
+        return TaskResource::collection($tasks);
     }
 
     public function store(Request $request)
