@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TaskResource;
 use App\Models\Category;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller {
 
-//    public function index()
-//    {
-//        return auth()->user()->categories;
-//    }
+    public function index()
+    {
+        return TaskResource::collection(auth()->user()->tasks->load('category'));
+    }
 
     public function store(Request $request)
     {
@@ -39,6 +40,17 @@ class TaskController extends Controller {
         }
 
         return response()->json(['message' => "Something went wrong"], 500);
+    }
+
+    public function show(Task $task)
+    {
+        if (auth()->id() !== $task->user_id) {
+            return response()->json(['message' => "Unauthorized"], 401);
+        }
+
+        $task->load('category');
+
+        return new TaskResource($task);
     }
 
     public function update(Request $request, Task $task)
