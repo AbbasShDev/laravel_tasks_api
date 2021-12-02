@@ -11,7 +11,7 @@ class CategoryController extends Controller {
 
     public function index()
     {
-        $categories = auth()->user()->categories()->with('tasks')->paginate(2);
+        $categories = auth()->user()->categories()->with('tasks')->paginate(25);
 
         return CategoryResource::collection($categories);
     }
