@@ -16,6 +16,7 @@ class TaskResource extends JsonResource {
             'created_at'  => $this->created_at,
             'category'    => new CategoryResource($this->whenLoaded('category')),
             'comments'    => CommentResource::collection($this->whenLoaded('comments')),
+            'files'       => FileResource::collection($this->whenLoaded('files')),
         ];
     }
 }

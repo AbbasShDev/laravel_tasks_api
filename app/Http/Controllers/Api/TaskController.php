@@ -7,6 +7,7 @@ use App\Http\Resources\TaskResource;
 use App\Models\Category;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller {
 
@@ -50,7 +51,7 @@ class TaskController extends Controller {
             return response()->json(['message' => "Unauthorized"], 401);
         }
 
-        $task->load('category', 'comments');
+        $task->load('category', 'comments', 'files');
 
         return new TaskResource($task);
     }
@@ -114,7 +115,11 @@ class TaskController extends Controller {
         }
 
         if ($task->forceDelete()) {
-            return response()->json(['message' => "Deleted successfully"]);
+            $deleteTaskFilesDir = Storage::deleteDirectory('public/tasks/' . $task->id);
+
+            if ($deleteTaskFilesDir) {
+                return response()->json(['message' => "Deleted successfully"]);
+            }
         }
 
         return response()->json(['message' => "Something went wrong"], 500);

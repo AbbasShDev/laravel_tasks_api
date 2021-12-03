@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\TaskController;
 use Illuminate\Support\Facades\Route;
@@ -11,9 +12,9 @@ Route::post('register', [AuthController::class, 'register']);
 
 Route::post('login', [AuthController::class, 'login']);
 
-Route::middleware('auth:api')->group(function (){
+Route::middleware('auth:api')->group(function () {
 
-    Route::prefix('user')->group(function (){
+    Route::prefix('user')->group(function () {
         Route::post('update/password', [UserController::class, 'updatePassword']);
         Route::post('update/profile', [UserController::class, 'updateProfile']);
     });
@@ -25,8 +26,10 @@ Route::middleware('auth:api')->group(function (){
     Route::apiResource('tasks', TaskController::class);
     Route::patch('tasks/{taskId}/restore', [TaskController::class, 'restore']);
     Route::delete('tasks/{taskId}/force-delete', [TaskController::class, 'forceDelete']);
+    Route::post('tasks/{taskId}/upload-file', [FileController::class, 'store']);
+
+    Route::delete('files/{file}', [FileController::class, 'destroy']);
 
     Route::apiResource('comments', CommentController::class)->except(['index', 'show']);
-
 
 });

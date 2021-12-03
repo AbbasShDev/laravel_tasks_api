@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Category extends Model
-{
+class Category extends Model {
+
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['title', 'user_id', 'description'];
@@ -24,6 +24,12 @@ class Category extends Model
 
     public function comments()
     {
-        return $this->hasManyThrough(Comment::class,Task::class);
+        return $this->hasManyThrough(Comment::class, Task::class);
     }
+
+    public function files()
+    {
+        return $this->hasManyThrough(File::class, Task::class);
+    }
+
 }
