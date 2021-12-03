@@ -14,7 +14,8 @@ class TaskResource extends JsonResource {
             'description' => $this->description,
             'due_date'    => $this->due_date,
             'created_at'  => $this->created_at,
-            'category'    => new CategoryResource($this->whenLoaded('category'))
+            'category'    => new CategoryResource($this->whenLoaded('category')),
+            'comments'    => CommentResource::collection($this->whenLoaded('comments')),
         ];
     }
 }

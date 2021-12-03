@@ -50,7 +50,7 @@ class TaskController extends Controller {
             return response()->json(['message' => "Unauthorized"], 401);
         }
 
-        $task->load('category');
+        $task->load('category', 'comments');
 
         return new TaskResource($task);
     }

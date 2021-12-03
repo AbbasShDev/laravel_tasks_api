@@ -21,4 +21,9 @@ class Category extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    public function comments()
+    {
+        return $this->hasManyThrough(Comment::class,Task::class);
+    }
 }

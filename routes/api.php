@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\TaskController;
 use Illuminate\Support\Facades\Route;
@@ -24,5 +25,8 @@ Route::middleware('auth:api')->group(function (){
     Route::apiResource('tasks', TaskController::class);
     Route::patch('tasks/{taskId}/restore', [TaskController::class, 'restore']);
     Route::delete('tasks/{taskId}/force-delete', [TaskController::class, 'forceDelete']);
+
+    Route::apiResource('comments', CommentController::class)->except(['index', 'show']);
+
 
 });
