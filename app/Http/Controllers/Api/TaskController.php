@@ -7,9 +7,17 @@ use App\Http\Resources\TaskResource;
 use App\Models\Category;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller {
+
+//    public function __construct()
+//    {
+//        $this->middleware('throttle:2,1');
+//        $this->middleware('throttle:2,1')->except('index');
+//        $this->middleware('throttle:2,1')->only('index');
+//    }
 
     public function index()
     {
@@ -114,12 +122,19 @@ class TaskController extends Controller {
             return response()->json(['message' => "Unauthorized"], 401);
         }
 
-        if ($task->forceDelete()) {
-            $deleteTaskFilesDir = Storage::deleteDirectory('public/tasks/' . $task->id);
+        $userEmail = $task->user->email;
+        $taskTitle = $task->title;
 
-            if ($deleteTaskFilesDir) {
-                return response()->json(['message' => "Deleted successfully"]);
-            }
+        if ($task->forceDelete()) {
+            Storage::deleteDirectory('public/tasks/' . $task->id);
+
+            Mail::send([], [], function ($msg) use ($userEmail, $taskTitle) {
+                $msg->subject('Task deleted');
+                $msg->to($userEmail);
+                $msg->setBody('<h3>Your task is permanently deleted</h3><p><strong>Task title: </strong>' . $taskTitle . '</p>', 'text/html');
+            });
+
+            return response()->json(['message' => "Deleted successfully"]);
         }
 
         return response()->json(['message' => "Something went wrong"], 500);
